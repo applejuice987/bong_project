@@ -7,5 +7,5 @@
 int main()
 {
     int a =3;
-    int b = 100;
+    int b = 11;
 }
