@@ -6,6 +6,9 @@
 
 int main()
 {
+
     int a =3;
     int b = 11;
+    int c = 24;
+
 }
