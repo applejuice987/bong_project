@@ -7,6 +7,12 @@
 int main()
 {
 
-   int a=10;
+    MYSQL* mysql = mysql_init(NULL);
+
+	resetCheck(&mysql);
+    mariadbConnect(&mysql);
+	
+	mysql_close(mysql);
+	return EXIT_SUCCESS;
 
 }
