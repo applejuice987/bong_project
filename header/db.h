@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 void resetCheck(MYSQL **mysql);
-void mariadbConnect(MYSQL **mysql);
+MYSQL* mariadbConnect(const char *host_ip);
+void selectQuery(MYSQL *mysql);
 
 

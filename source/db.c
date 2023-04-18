@@ -11,33 +11,43 @@ void resetCheck(MYSQL **mysql){
 }
 
 // mariadb 접속(연결)
-void mariadbConnect(MYSQL **mysql){
+MYSQL* mariadbConnect(const char *host_ip)
+{
+    MYSQL *mysql = mysql_init(NULL);
     if (!mysql_real_connect(
-            *mysql
-            , "192.168.64.6" // host ip
-            , "lee"     // user_id
-            , "1234"   // passwd
-            , "employees"       // 접속대상 db    
-            , 3306             // mariadb port
-            , NULL             // socket
-            , 0
-        )) {
-            // 실패시, 오류 내용 출력
-            printf("%s\n", mysql_error(*mysql));
-        }
-        else {
-            // 성공시, SQL성공시, 0리턴 
-            if (mysql_query(*mysql, "select * from dept_manager")) {
-                // 실패
-                printf("Query failed: %s\n", mysql_error(*mysql));
-            }
-            else {
-                // 성공
-                MYSQL_RES * result = mysql_store_result(*mysql);
-                unsigned int num_fields = mysql_num_fields(result);
+            mysql
+            , host_ip      // host ip
+            , "lee"        // user_id
+            , "1234"       // passwd
+            , "employees"  // 접속대상 db
+            , 3306         // mariadb port
+            , NULL         // socket
+            , 0))
+    {
+        // 실패시, 오류 내용 출력
+        printf("%s\n", mysql_error(mysql));
+        return NULL;
+    }
+    // mysql 연결 반환
+    return mysql;
+}
 
-                if (!result) {
-                    printf("Couldn't get results set : %s\n", mysql_error(*mysql));
+// SELECT 쿼리 실행
+void selectQuery(MYSQL *mysql)
+{
+    if (mysql_query(mysql, "select * from dept_manager"))
+    {
+        // 실패
+        printf("Query failed: %s\n", mysql_error(mysql));
+    }
+    else
+    {
+        // 성공
+        MYSQL_RES *result = mysql_store_result(mysql);
+        unsigned int num_fields = mysql_num_fields(result);
+
+        if (!result) {
+                    printf("Couldn't get results set : %s\n", mysql_error(mysql));
                 }
                 else {
                     MYSQL_ROW row;
@@ -59,6 +69,5 @@ void mariadbConnect(MYSQL **mysql){
                     }
                     mysql_free_result(result);
                 }
-            }
-        }
+    }
 }
