@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "curl.h": "c"
+        "curl.h": "c",
+        "json.h": "c",
+        "config.h": "c",
+        "stdio.h": "c"
     }
 }
