@@ -61,3 +61,6 @@ struct sniff_tcp
     u_short th_sum;
     u_short th_urp;
 };
+
+void packet_capture();
+void got_packet(u_char*, const struct pcap_pkthdr*, const u_char);
