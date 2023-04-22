@@ -40,9 +40,9 @@ mysql.h 등 다운로드 해야했던 내용 있으면 어떤 내용 다운로�
 3. 필터링파트
    3.1 포트번호가 80 or 443인지 확인   //미완성
    3.2 목적지 ip가 db내 필터링 리스트에 존재하는지 확인 //미완성
-   3.3 바이러스 토탈 api 연결 확인 //미완성 (04.16 기준 진행중)
+   3.3 criminal ip  api 연결 확인 //미완성 (04.16 기준 진행중)
    3.4 ip주소 질의하여 응답값 원하는 내용 얻어내기 //미완성
-//전체 응답내용 설명 링크 (https://developers.virustotal.com/reference/ip-object)
+//전체 응답내용 설명 링크 (https://www.criminalip.io/ko/developer/api/get-ip-malicious-info)
    3.5 악성ip 일경우 ip주소와 웹에서 활용 할 수 있도록 얻어낸 내용중 일부 db에 저장 (3.2 와 5.*에 활용) //미완성
 
 4. 패킷조작
@@ -69,11 +69,15 @@ mysql.h 등 다운로드 해야했던 내용 있으면 어떤 내용 다운로�
 
 정민수
 
-04-22 http get 형태의 전송을 위해서 json 형식의 파일 필요 -> json.h헤더파일 필요
+04-21 http get 형태의 전송을 위해서 json 형식의 파일 필요 -> json.h헤더파일 필요
 sudo apt-get install libjson-c-dev 명령어로 설치함.(처음시작을위한 것) 헤더파일내에 추가해뒀으므로
 일단은 설치할필요없음. 그러나 gcc 명령어시 -ljson-c 옵션 추가사용해야함.
 
 curl 라이브러리를 활용하여 api 서버에 http get 요청 발송하고 표준출력에 응답 받아오는 것 확인. 
 pcap에서 긁어온 ip를 넘겨받아 전달 및 긁어온 데이터를 메모리에 받아 C에서 처리가능하도록 기능추가해야함
+gcc 명령어시 -lcurl 옵션 추가사용해야함.
+
+04-22 메모리에 받아서 데이터 처리 가능하도록 수정. 사용 api 를 virustotal 에서 criminal ip로 교체
+
 
 
