@@ -3,21 +3,18 @@
 #include "../header/pcapcap.h"
 #include "../header/pcapmodu.h"
 
-int main()
-{   
-    // IP 주소 입력
-    const char* host_ip = "192.168.64.6";
+int main() {
+    const char *ip_address = "192.168.64.6";
+    const char *table_name = "employees";
+    MYSQL *mysql = mariadbConnect(ip_address,table_name);
 
-    // Mariadb 접속(연결)
-    MYSQL* mysql = mariadbConnect(host_ip);
-
-    // MYSQL 구조체 초기화 확인
-    resetCheck(&mysql);
-
-    // Mariadb 접속 성공시 실행
     if (mysql) {
-        // SELECT 쿼리 실행
-        selectQuery(mysql);
+        // IP 주소 존재 여부 확인
+        
+        char query[256];
+        snprintf(query, sizeof(query), "SELECT * FROM %s WHERE ip_address = '%s'", table_name, ip_address);
+
+        int ip_exists = selectQuery(mysql, query);
 
         // 연결 종료
         mysql_close(mysql);
@@ -25,3 +22,5 @@ int main()
 
     return EXIT_SUCCESS;
 }
+
+
