@@ -48,7 +48,7 @@ int main()
 
     curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "GET");
     //curl_easy_setopt(hnd, CURLOPT_URL, "https://www.virustotal.com/api/v3/ip_addresses/213.226.123.202");
-    curl_easy_setopt(hnd, CURLOPT_URL, "https://api.criminalip.io/v1/feature/ip/malicious-info?ip=213.226.123.202");
+    curl_easy_setopt(hnd, CURLOPT_URL, "https://api.criminalip.io/v1/feature/ip/malicious-info?ip=168.126.63.1");
 
     struct curl_slist *headers = NULL;
     headers = curl_slist_append(headers, "accept: application/json");
@@ -66,8 +66,19 @@ int main()
 
     CURLcode ret = curl_easy_perform(hnd);
     curl_easy_cleanup(hnd);
+    
+    json_object *jobj,*is_malobj;
+    jobj = json_tokener_parse(chunk.memory);
+    is_malobj = json_object_object_get(jobj, "is_malicious");
+   
+    
+
+
+
+
     if (chunk.size > 0) {
-        printf("111111111 : %s", chunk.memory);
+        printf("111111111 : %s\n\n\n", chunk.memory);
+        printf("is_malicious %d\n",json_object_get_boolean(is_malobj));
     }
     free(chunk.memory);
 }
