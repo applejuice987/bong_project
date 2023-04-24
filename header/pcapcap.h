@@ -12,15 +12,15 @@ typedef unsigned short u_short;
 typedef unsigned int u_int;
 
 // 이더넷 헤더 구조체
-struct sniff_ethernet
+typedef struct sniff_ethernet
 {
     u_char ether_dhost[ETHER_ADDR_LEN];
     u_char ether_shost[ETHER_ADDR_LEN];
     u_short ether_type;
-};
+}   MAC;
 
 // IP 헤더 구조체
-struct sniff_ip
+typedef struct sniff_ip
 {
     u_char ip_vhl;
     u_char ip_tos;
@@ -36,11 +36,11 @@ struct sniff_ip
     u_short ip_sum;
     struct in_addr ip_src;
     struct in_addr ip_dst;
-};
+}   IP;
 
 // TCP 헤더 구조체
 typedef u_int tcp_seq;
-struct sniff_tcp
+typedef struct sniff_tcp
 {
     u_short th_sport;
     u_short th_dport;
@@ -60,7 +60,7 @@ struct sniff_tcp
     u_short th_win;
     u_short th_sum;
     u_short th_urp;
-};
+}   TCP;
 
 void packet_capture();
 void got_packet(u_char*, const struct pcap_pkthdr*, const u_char);
