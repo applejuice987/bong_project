@@ -14,7 +14,7 @@ int main()
     // [성공] cnt가 0이 되면 0 반환
     // [실패] PCAP_ERROR
     // [비고] pcap_dispatch, pcap_next, pcap_next_ex로 대체 가능
-    pcap_close(handle);
 
-    printf("captured ip: %s \n", captured_ip);
+    printf("captured ip: %s \n", inet_ntoa(ip->ip_dst));
+    pcap_close(handle);
 }

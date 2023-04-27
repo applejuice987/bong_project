@@ -47,9 +47,6 @@ void packet_capture_setter(pcap_t **handle)
 
 void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
 {
-    const MAC *mac;
-    const IP *ip;
-    const TCP *tcp;
     u_int size_ip, size_tcp;
 
     // MAC 주소
@@ -69,7 +66,6 @@ void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *pa
     size_ip = IP_HL(ip) * 4;
     printf("src IP: %s\n", inet_ntoa(ip->ip_src));
     printf("dst IP: %s\n", inet_ntoa(ip->ip_dst));
-    captured_ip = inet_ntoa(ip->ip_dst);
 
     // TCP 주소
     tcp = (TCP*)(packet + SIZE_ETHERNET + size_ip);

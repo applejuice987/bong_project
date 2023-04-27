@@ -64,9 +64,13 @@ mysql.h 등 다운로드 해야했던 내용 있으면 어떤 내용 다운로�
 양호철
 04-22
 패킷캡처 진행중
-포트 필터 조건 src port 80 or src port 443
+포트 필터 조건 dst port 80 or dst port 443
 04-24
 pcap_loop 인자로 사용될 got_packet callback 함수
 libpcap 기본 함수에 주석
+04-27
+pcap handle main으로
+MAC IP TCP 구조체 변수 전역변수로
+
 
 정민수
