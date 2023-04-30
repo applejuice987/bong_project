@@ -4,7 +4,9 @@
         "json.h": "c",
         "config.h": "c",
         "stdio.h": "c",
-        "db.h": "c"
+        "db.h": "c",
+        "string.h": "c",
+        "python.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
