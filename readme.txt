@@ -71,6 +71,8 @@ libpcap 기본 함수에 주석
 04-27
 pcap handle main으로
 MAC IP TCP 구조체 변수 전역변수로
-
+05-01
+pcap_lookupdev()함수 pcap_findalldevs()함수로 교체
+비교할 ip를 얻기 위해 pcap_loop()함수를 pcap_next_ex()함수로 교체
 
 정민수

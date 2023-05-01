@@ -6,15 +6,26 @@
 
 int main()
 {
+    const IP *got_ip;
+    struct pcap_pkthdr *header;
+    const u_char *packet;
     pcap_t *handle;
-    packet_capture_setter(&handle);
-    pcap_loop(handle, 1, got_packet, NULL);
-    // [용도] 실제 packet capture하는 함수
-    // [인자] handle, 읽는 cnt (0 = 무한), callback 함수, callback 함수 첫번째 인자
-    // [성공] cnt가 0이 되면 0 반환
-    // [실패] PCAP_ERROR
-    // [비고] pcap_dispatch, pcap_next, pcap_next_ex로 대체 가능
 
-    printf("captured ip: %s \n", inet_ntoa(ip->ip_dst));
+    packet_capture_setter(&handle);
+
+    // 테스트
+    // pcap_next_ex(handle, &header, &packet);
+    // got_packet(packet, &got_ip);
+
+    while(pcap_next_ex(handle, &header, &packet) == 1)
+        got_packet(packet, &got_ip);
+
+    // [용도] packet에 정보를 전달하는 함수
+    // [인자] handle, packet의 header 구조체, packet 정보
+    // [성공] 1
+    // [실패] 시간초과 0, 실패 PCAP_ERROR
+
+    printf("got_ip: %s \n", inet_ntoa(got_ip->ip_dst));
+
     pcap_close(handle);
 }

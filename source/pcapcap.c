@@ -13,6 +13,10 @@ void packet_capture_setter(pcap_t **handle)
     const u_char* packet;
 
     pcap_findalldevs(&dev, errbuf);
+    // [용도] network device의 리스트를 구하는 함수
+    // [인자] device 리스트를 저장할 포인터, errbuf 에러메세지
+    // [성공] 0
+    // [실패] PCAP_ERROR = -1
 
     // dev = pcap_lookupdev(errbuf);
     // [용도] network device를 찾는 함수
@@ -45,8 +49,11 @@ void packet_capture_setter(pcap_t **handle)
     // [실패] PCAP_ERROR
 }
 
-void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet)
+void got_packet(const u_char* packet, const IP** got_ip)
 {
+    const MAC *mac;
+    const IP *ip;
+    const TCP *tcp;
     u_int size_ip, size_tcp;
 
     // MAC 주소
@@ -66,6 +73,7 @@ void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *pa
     size_ip = IP_HL(ip) * 4;
     printf("src IP: %s\n", inet_ntoa(ip->ip_src));
     printf("dst IP: %s\n", inet_ntoa(ip->ip_dst));
+    *got_ip = ip;
 
     // TCP 주소
     tcp = (TCP*)(packet + SIZE_ETHERNET + size_ip);

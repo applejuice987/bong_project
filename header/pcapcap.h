@@ -1,6 +1,7 @@
 //pcapcap.c 에 있는 함수 원형 등 적으면됨.
 
 #include <pcap.h>
+#include <arpa/inet.h>
 
 #define ETHER_ADDR_LEN 6
 #define SIZE_ETHERNET 14
@@ -62,9 +63,5 @@ typedef struct sniff_tcp
     u_short th_urp;
 }   TCP;
 
-const MAC *mac;
-const IP *ip;
-const TCP *tcp;
-
 void packet_capture_setter(pcap_t**);
-void got_packet(u_char*, const struct pcap_pkthdr*, const u_char*);
+void got_packet(const u_char*, const IP**);
