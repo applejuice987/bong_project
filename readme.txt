@@ -99,4 +99,6 @@ gcc 명령어시 -lcurl 옵션 추가사용해야함.
 04-30 파이썬 모듈 추가함 C에서 파이썬 모듈 사용하기 위해서 sudo apt-get install python3-dev 실행하여 python.h다운받아야함
       파이썬 모듈 컴파일을 위해서 gcc 명령시 -lpython3.10 옵션 추가해야함 
 
+05-01 db와 1차머징함 유저명, 테이블 명 등 통일 하고 api,py호출과 연계함.
+
 
