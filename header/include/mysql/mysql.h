@@ -80,7 +80,7 @@ typedef int my_socket;
 #include "mysql_com.h"
 
 /* Include declarations of plug-in API */
-#include "mysql/client_plugin.h"  // IWYU pragma: keep
+#include "client_plugin.h"  // IWYU pragma: keep
 
 /*
   The client should be able to know which version it is compiled against,

@@ -34,7 +34,7 @@ MYSQL* mariadbConnect(db_info info)
 // IP 필터링 쿼리 실행
 int ipFilteringQuery(MYSQL* mysql, db_info info,char *ip_str) {
     char query[100];
-    sprintf(query, "SELECT * FROM %s WHERE ip_address = '%s'", info.table_name,ip_str);
+    sprintf(query, "SELECT * FROM %s WHERE ip_str = '%s'", info.table_name,ip_str);
     if (mysql_query(mysql, query)) {
         // 실패
         printf("Query failed: %s\n", mysql_error(mysql));

@@ -7,7 +7,8 @@
         "db.h": "c",
         "string.h": "c",
         "pcapcap.h": "c",
-        "python.h": "c"
+        "python.h": "c",
+        "udf_registration_types.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 
