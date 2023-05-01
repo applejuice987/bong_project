@@ -6,7 +6,10 @@
         "stdio.h": "c",
         "db.h": "c",
         "string.h": "c",
+        "pcapcap.h": "c",
         "python.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
+
+
 }
