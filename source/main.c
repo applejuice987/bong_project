@@ -1,20 +1,31 @@
-//main함수 진행될 파일
+// main 함수 진행될 파일
 #include "../header/db.h"
 #include "../header/pcapcap.h"
 #include "../header/pcapmodu.h"
 
-int main() {
-    const char *ip_address = "192.168.64.6";
-    const char *table_name = "employees";
-    MYSQL *mysql = mariadbConnect(ip_address,table_name);
+int main()
+{   
+    // DB 정보 입력
+    db_info info = {
+        .host_ip = "192.168.64.6",
+        .user_id = "lee",
+        .passwd = "1234",
+        .db_name = "employees",
+        .table_name = "dept_manager",
+        .port = 3306,
+        .socket = NULL
+    };
 
+    // Mariadb 접속(연결)
+    MYSQL* mysql = mariadbConnect(info);
+
+    // MYSQL 구조체 초기화 확인
+    resetCheck(&mysql);
+
+    // Mariadb 접속 성공시 실행
     if (mysql) {
-        // IP 주소 존재 여부 확인
-        
-        char query[256];
-        snprintf(query, sizeof(query), "SELECT * FROM %s WHERE ip_address = '%s'", table_name, ip_address);
-
-        int ip_exists = selectQuery(mysql, query);
+        // IP 필터링 쿼리 실행
+        ipFilteringQuery(mysql, info);
 
         // 연결 종료
         mysql_close(mysql);
@@ -22,5 +33,3 @@ int main() {
 
     return EXIT_SUCCESS;
 }
-
-
