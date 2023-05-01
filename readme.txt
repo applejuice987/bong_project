@@ -73,7 +73,7 @@ mysql.h 등 다운로드 해야했던 내용 있으면 어떤 내용 다운로�
 [0419_01] db.c mariadbConnect 함수에서 mariadb 연결 부분과 SELECT 쿼리 실행 부분을 분할하여 함수간의 역할 분리
    1. main에서 문자열 인자로 받아 IP 필터링 가능하게 수정
 
-[0422_01 진행 중] sql selectQuery부분에서 select ip를 할수있게 수정하기.
+[0501_01] sql selectQuery부분에서 select ip를 할수있게 수정완료.
 
 
 양호철
