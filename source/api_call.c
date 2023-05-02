@@ -22,7 +22,7 @@ size_t write_to_memory_callback(void *buffer, size_t size, size_t nmemb, void *u
 // 공식사이트에도 위함수 코드에 대한 자세한 내용은없음. 
 // "받아온내용을 변수에 넣기위한 콜백함수" 정도로만 생각하면될듯.
 
-int api_call(CURL * hnd,char * ip_str) //api 호출 함수
+int api_call(CURL * hnd,u_char * ip_str) //api 호출 함수
 {
    
     struct MemoryStruct chunk; //응답내용 받을 변수

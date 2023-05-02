@@ -51,7 +51,9 @@ mysql.h 등 다운로드 해야했던 내용 있으면 어떤 내용 다운로�
 5. 웹UI
    5.1 React와 php 연동 확인 //완성 
    5.2 악성ip감지로 우회된 사이트임을 공지 //미완성(4.16기준 진행중)
-**앞내용 진행상황에 따라 내용 추가
+   5.3 비밀번호 입력하여 로그인기능(회원가입은계획에없음)//완성
+   5.4 도메인 관리(추가,삭제)//미완성
+
 
 
 
@@ -70,15 +72,27 @@ mysql.h 등 다운로드 해야했던 내용 있으면 어떤 내용 다운로�
       -lmysqlclient 옵션은 컴파일할 때 mysqlclient 라이브러리를 링크하도록 추가.
       이 라이브러리를 사용하여 MySQL 데이터베이스와 상호 작용.
 
+
 [0419_01] db.c mariadbConnect 함수에서 mariadb 연결 부분과 SELECT 쿼리 실행 부분을 분할하여 함수간의 역할 분리
    1. main에서 문자열 인자로 받아 IP 필터링 가능하게 수정
 
 [0501_01] sql selectQuery부분에서 select ip를 할수있게 수정완료.
 
 
+
 양호철
-
-
+04-22
+패킷캡처 진행중
+포트 필터 조건 dst port 80 or dst port 443
+04-24
+pcap_loop 인자로 사용될 got_packet callback 함수
+libpcap 기본 함수에 주석
+04-27
+pcap handle main으로
+MAC IP TCP 구조체 변수 전역변수로
+05-01
+pcap_lookupdev()함수 pcap_findalldevs()함수로 교체
+비교할 ip를 얻기 위해 pcap_loop()함수를 pcap_next_ex()함수로 교체
 
 정민수
 

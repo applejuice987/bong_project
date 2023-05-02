@@ -23,7 +23,7 @@ void resetCheck(MYSQL **mysql);
 MYSQL* mariadbConnect(db_info info);
 
 // IP 필터링 쿼리 실행
-int ipFilteringQuery(MYSQL* mysql, db_info info,char *ip_str);
+int ipFilteringQuery(MYSQL* mysql, db_info info,u_char *ip_str);
 
 // SELECT 쿼리 실행
 void selectQuery(MYSQL *mysql, int ip_exists);

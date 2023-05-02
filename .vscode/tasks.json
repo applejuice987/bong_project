@@ -7,17 +7,22 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
+
                 "${workspaceFolder}/source/main.c",
                 "${workspaceFolder}/source/db.c",
                 "${workspaceFolder}/source/api_call.c",
                 "${workspaceFolder}/source/py_call.c",
+                "${fileDirname}/*.c",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
                 "-lpython3.0",
                 "-lmysqlclient",
                 "-ljson-c",
                 "-lcurl",
+                "-lpcap"
                 
+
+        
             ],
             "options": {
                 "cwd": "${fileDirname}"

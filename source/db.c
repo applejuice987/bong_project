@@ -32,7 +32,7 @@ MYSQL* mariadbConnect(db_info info)
 }
 
 // IP 필터링 쿼리 실행
-int ipFilteringQuery(MYSQL* mysql, db_info info,char *ip_str) {
+int ipFilteringQuery(MYSQL* mysql, db_info info, u_char *ip_str) {
     char query[100];
     sprintf(query, "SELECT * FROM %s WHERE ip_str = '%s'", info.table_name,ip_str);
     if (mysql_query(mysql, query)) {
