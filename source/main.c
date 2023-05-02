@@ -32,8 +32,6 @@ int main()
         .socket = NULL
     };
     
-
-    
     packet_capture_setter(&handle);
 
     // 테스트
@@ -54,6 +52,8 @@ int main()
     mysql = mariadbConnect(info); // Mariadb 접속(연결)
    
     resetCheck(&mysql); // MYSQL 구조체 초기화 확인
+
+    
 
     
     if (mysql) { // Mariadb 접속 성공시 실행
