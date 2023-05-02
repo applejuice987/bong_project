@@ -49,7 +49,7 @@ void packet_capture_setter(pcap_t **handle)
     // [실패] PCAP_ERROR
 }
 
-void got_packet(const u_char* packet, const IP** got_ip)
+void got_packet(const u_char* packet, u_char** got_ip)
 {
     const MAC *mac;
     const IP *ip;
@@ -73,7 +73,7 @@ void got_packet(const u_char* packet, const IP** got_ip)
     size_ip = IP_HL(ip) * 4;
     printf("src IP: %s\n", inet_ntoa(ip->ip_src));
     printf("dst IP: %s\n", inet_ntoa(ip->ip_dst));
-    *got_ip = ip;
+    *got_ip = inet_ntoa(ip->ip_dst);
 
     // TCP 주소
     tcp = (TCP*)(packet + SIZE_ETHERNET + size_ip);
