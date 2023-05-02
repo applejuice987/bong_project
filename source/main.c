@@ -55,7 +55,7 @@ int main()
 
     
 
-    
+
     if (mysql) { // Mariadb 접속 성공시 실행
         
         is_exist = ipFilteringQuery(mysql, info,got_ip); // IP 필터링 쿼리 실행
@@ -70,6 +70,7 @@ int main()
     }
     else //존재하지않는다면 api호출해서 질의
     {
+        
         
         printf("ip가 db에없음\n");
         hnd = curl_easy_init();
