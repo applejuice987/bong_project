@@ -35,11 +35,13 @@ int main()
     packet_capture_setter(&handle);
 
     // 테스트
-    pcap_next_ex(handle, &header, &packet);
-    got_packet(packet, &got_ip);
-   
-    // while(pcap_next_ex(handle, &header, &packet) == 1)
+    // pcap_next_ex(handle, &header, &packet);
     // got_packet(packet, &got_ip);
+   
+    while(pcap_next_ex(handle, &header, &packet) == 1)
+    {
+    
+    got_packet(packet, &got_ip);
 
     // [용도] packet에 정보를 전달하는 함수
     // [인자] handle, packet의 header 구조체, packet 정보
@@ -52,9 +54,6 @@ int main()
     mysql = mariadbConnect(info); // Mariadb 접속(연결)
    
     resetCheck(&mysql); // MYSQL 구조체 초기화 확인
-
-    
-
 
     if (mysql) { // Mariadb 접속 성공시 실행
         
@@ -71,7 +70,6 @@ int main()
     else //존재하지않는다면 api호출해서 질의
     {
         
-        
         printf("ip가 db에없음\n");
         hnd = curl_easy_init();
         is_mal = api_call(hnd,got_ip);
@@ -84,7 +82,7 @@ int main()
 
         curl_easy_cleanup(hnd);
     }
-
+    }
     pcap_close(handle);
     
 }
