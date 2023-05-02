@@ -34,6 +34,8 @@ int main()
     
     packet_capture_setter(&handle);
 
+
+
     // 테스트
     pcap_next_ex(handle, &header, &packet);
     got_packet(packet, &got_ip);
