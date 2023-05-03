@@ -1,10 +1,8 @@
 // main함수 진행될 파일
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 
 #include "../header/py_call.h"
 #include "../header/db.h"
@@ -33,8 +31,6 @@ int main()
     };
     
     packet_capture_setter(&handle);
-
-
 
     // 테스트
     pcap_next_ex(handle, &header, &packet);
