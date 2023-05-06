@@ -2,6 +2,7 @@
 //함수별로 매개변수 , 리턴값 등 어떻게 사용해야하는지 주석 달아주세요.
 
 #include "../header/pcapcap.h"
+#include "../header/pcapmodu.h"
 
 void packet_capture_setter(pcap_t **handle)
 {
@@ -50,15 +51,60 @@ void packet_capture_setter(pcap_t **handle)
     
 }
 
-void got_packet(const u_char* packet, u_char** got_ip)
+int got_packet(const u_char* packet, u_char** got_ip)
 {
+    //리턴 0일때는 이후행동없이 다음패킷 보기 1일때는 ip검사진행
     const MAC *mac;
     const IP *ip;
     const TCP *tcp;
+    const char *payload; /* Packet payload */
+
     u_int size_ip, size_tcp;
 
     // MAC 주소
     mac = (MAC*)(packet);
+
+    // IP 주소
+    ip = (IP*)(packet + SIZE_ETHERNET);
+    size_ip = IP_HL(ip) * 4;
+    *got_ip = inet_ntoa(ip->ip_dst);
+
+    // TCP 주소
+    tcp = (TCP*)(packet + SIZE_ETHERNET + size_ip);
+    size_tcp = TH_OFF(tcp) * 4;
+
+
+    payload = (u_char *)(packet + SIZE_ETHERNET + size_ip + size_tcp);
+	
+	if ( strncmp( payload , "GET / HTTP/" , 11 ) != 0 ) {
+        if(tcp->th_flags == TH_SYN)
+        {
+            //출력부분
+            printf("src MAC: ");
+            for (int i = 0; i < ETHER_ADDR_LEN; i++)
+                printf("%02x ", mac->ether_shost[i]);
+            puts("");
+
+            printf("dst MAC: ");
+            for (int i = 0; i < ETHER_ADDR_LEN; i++)
+                printf("%02x ", mac->ether_dhost[i]);
+            puts("");
+
+            
+            printf("src IP: %s\n", inet_ntoa(ip->ip_src));
+            printf("dst IP: %s\n", inet_ntoa(ip->ip_dst));
+            
+
+            printf("src PORT: %d\n", ntohs(tcp->th_sport));
+            printf("dst PORT: %d\n", ntohs(tcp->th_dport));
+
+            printf("flag = %x\n",tcp->th_flags);
+            return 1;
+        }
+		return 0;
+	}
+
+    //출력부분
     printf("src MAC: ");
     for (int i = 0; i < ETHER_ADDR_LEN; i++)
         printf("%02x ", mac->ether_shost[i]);
@@ -69,16 +115,43 @@ void got_packet(const u_char* packet, u_char** got_ip)
         printf("%02x ", mac->ether_dhost[i]);
     puts("");
 
-    // IP 주소
-    ip = (IP*)(packet + SIZE_ETHERNET);
-    size_ip = IP_HL(ip) * 4;
+    
     printf("src IP: %s\n", inet_ntoa(ip->ip_src));
     printf("dst IP: %s\n", inet_ntoa(ip->ip_dst));
-    *got_ip = inet_ntoa(ip->ip_dst);
+    
 
-    // TCP 주소
-    tcp = (TCP*)(packet + SIZE_ETHERNET + size_ip);
-    size_tcp = TH_OFF(tcp) * 4;
     printf("src PORT: %d\n", ntohs(tcp->th_sport));
     printf("dst PORT: %d\n", ntohs(tcp->th_dport));
+
+    // print payload data .
+	printf("INFO: payload = %s .\n" , payload );
+
+    char *host_data = NULL;
+	char *host_data_end = NULL;
+	int host_data_len = 0;
+	char host_data_str[256] = { 0x00 };
+
+    host_data = strstr(payload , "Host: ");
+	if ( host_data != NULL ) {
+		host_data += 6;
+	
+		host_data_end = strstr ( host_data , "\r\n" );
+		
+		host_data_len = host_data_end - host_data ;
+		
+		strncpy(host_data_str , host_data , host_data_len );
+		
+		//char *host_data = strstr(payload , "Host: ");
+		// print host_data string .
+		printf("INFO: host_data_str = %s .\n" , host_data_str );
+		
+	} else {
+		return 0;
+	}
+
+    //host_data_str을 db검사하여 있는 url이라면 발송 
+    sendraw(packet , sendraw_mode);
+
+    return 0;
+
 }

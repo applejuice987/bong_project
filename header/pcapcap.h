@@ -7,7 +7,7 @@
 #define SIZE_ETHERNET 14
 #define IP_HL(ip) (((ip)->ip_vhl) & 0x0f)
 #define IP_V(ip) (((ip)->ip_vhl) >> 4)
-
+#define sendraw_mode 1
 typedef unsigned char u_char;
 typedef unsigned short u_short;
 typedef unsigned int u_int;
@@ -49,6 +49,7 @@ typedef struct sniff_tcp
     tcp_seq th_ack;
     u_char th_offx2;
     #define TH_OFF(th) (((th)->th_offx2 & 0xf0) >> 4)
+    u_char th_flags;
     #define TH_FIN 0x01
     #define TH_SYN 0x02
     #define TH_RST 0x04
@@ -64,4 +65,4 @@ typedef struct sniff_tcp
 }   TCP;
 
 void packet_capture_setter(pcap_t**);
-void got_packet(const u_char*, u_char**);
+int got_packet(const u_char*, u_char**);
