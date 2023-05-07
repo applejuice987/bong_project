@@ -50,7 +50,6 @@ int main()
     mysql = mariadbConnect(info); // Mariadb 접속(연결)
    
     resetCheck(&mysql); // MYSQL 구조체 초기화 확인
-
     
 
     
