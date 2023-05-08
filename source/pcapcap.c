@@ -4,7 +4,7 @@
 #include "../header/pcapcap.h"
 #include "../header/pcapmodu.h"
 
-void packet_capture_setter(pcap_t **handle)
+void packet_capture_setter(pcap_t **handle,int mode)
 {
     pcap_if_t *dev;
     char dev2[64] = "lo" ; 
@@ -25,7 +25,10 @@ void packet_capture_setter(pcap_t **handle)
     // [인자] errbuf - 실패시 에러메세지
     // [성공] network device의 이름
     // [실패] NULL
-    dev[0].name=dev2; 
+    if(mode==1)
+    {
+        dev[0].name=dev2; 
+    }
     pcap_lookupnet(dev[0].name, &net, &mask, errbuf);
     // [용도] network address, subnetmask를 찾는 함수
     // [인자] device, ip address 저장주소, subnetmask 저장주소, 실패시 에러메세지
