@@ -61,7 +61,7 @@ int api_call(CURL * hnd,u_char * ip_str) //api 호출 함수
   
     CURLcode ret = curl_easy_perform(hnd);
     //curl 요청 실행. 응답코드가 ret에 담김.
-    printf("111111111 : %s\n\n\n", chunk.memory);
+    //printf("111111111 : %s\n\n\n", chunk.memory);
     json_object *jobj,*is_malobj;
     jobj = json_tokener_parse(chunk.memory);
     //받아온 json 파싱

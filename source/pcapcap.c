@@ -7,6 +7,7 @@
 void packet_capture_setter(pcap_t **handle)
 {
     pcap_if_t *dev;
+    char dev2[64] = "lo" ; 
     char *errbuf;
     bpf_u_int32 net, mask;
     struct bpf_program fp;
@@ -24,7 +25,7 @@ void packet_capture_setter(pcap_t **handle)
     // [인자] errbuf - 실패시 에러메세지
     // [성공] network device의 이름
     // [실패] NULL
-
+    dev[0].name=dev2; 
     pcap_lookupnet(dev[0].name, &net, &mask, errbuf);
     // [용도] network address, subnetmask를 찾는 함수
     // [인자] device, ip address 저장주소, subnetmask 저장주소, 실패시 에러메세지
@@ -77,8 +78,12 @@ int got_packet(const u_char* packet, u_char** got_ip)
     payload = (u_char *)(packet + SIZE_ETHERNET + size_ip + size_tcp);
 	
 	if ( strncmp( payload , "GET / HTTP/" , 11 ) != 0 ) {
-        if(tcp->th_flags == TH_SYN)
+        printf("%s\n",*got_ip);
+        printf("%s\n","127.0.0.1");
+        printf("!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!!!!!!!!!!\n");
+        if(tcp->th_flags == TH_SYN && strcmp(*got_ip,"127.0.0.1") != 0)
         {
+           
             //출력부분
             printf("src MAC: ");
             for (int i = 0; i < ETHER_ADDR_LEN; i++)
