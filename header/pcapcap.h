@@ -65,4 +65,4 @@ typedef struct sniff_tcp
 }   TCP;
 
 void packet_capture_setter(pcap_t**,int);
-int got_packet(const u_char*, u_char**);
+int got_packet(const u_char*, u_char**,int);

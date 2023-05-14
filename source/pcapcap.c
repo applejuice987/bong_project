@@ -55,7 +55,7 @@ void packet_capture_setter(pcap_t **handle,int mode)
     
 }
 
-int got_packet(const u_char* packet, u_char** got_ip)
+int got_packet(const u_char* packet, u_char** got_info,int mode)
 {
     //리턴 0일때는 이후행동없이 다음패킷 보기 1일때는 ip검사진행
     const MAC *mac;
@@ -71,22 +71,18 @@ int got_packet(const u_char* packet, u_char** got_ip)
     // IP 주소
     ip = (IP*)(packet + SIZE_ETHERNET);
     size_ip = IP_HL(ip) * 4;
-    *got_ip = inet_ntoa(ip->ip_dst);
+  
 
     // TCP 주소
     tcp = (TCP*)(packet + SIZE_ETHERNET + size_ip);
     size_tcp = TH_OFF(tcp) * 4;
 
-
-    payload = (u_char *)(packet + SIZE_ETHERNET + size_ip + size_tcp);
-	
-	if ( strncmp( payload , "GET / HTTP/" , 11 ) != 0 ) {
-        printf("%s\n",*got_ip);
-        printf("%s\n","127.0.0.1");
-        printf("!!!!!!!!!!!!!!!!!!!\n!!!!!!!!!!!!!!!!!!!!\n");
-        if(tcp->th_flags == TH_SYN && strcmp(*got_ip,"127.0.0.1") != 0)
+    if(mode==2) //외부 랜카드 검사부분
+    {
+        *got_info = inet_ntoa(ip->ip_dst); //목적지 ip 얻어냄.
+        if(tcp->th_flags == TH_SYN && strcmp(*got_info,"127.0.0.1") != 0) //syn패킷이고 목적지가 자신이 아니라면 1리턴하여 이후진행
         {
-           
+            
             //출력부분
             printf("src MAC: ");
             for (int i = 0; i < ETHER_ADDR_LEN; i++)
@@ -108,58 +104,64 @@ int got_packet(const u_char* packet, u_char** got_ip)
 
             printf("flag = %x\n",tcp->th_flags);
             return 1;
-        }
-		return 0;
-	}
-
-    //출력부분
-    printf("src MAC: ");
-    for (int i = 0; i < ETHER_ADDR_LEN; i++)
-        printf("%02x ", mac->ether_shost[i]);
-    puts("");
-
-    printf("dst MAC: ");
-    for (int i = 0; i < ETHER_ADDR_LEN; i++)
-        printf("%02x ", mac->ether_dhost[i]);
-    puts("");
-
-    
-    printf("src IP: %s\n", inet_ntoa(ip->ip_src));
-    printf("dst IP: %s\n", inet_ntoa(ip->ip_dst));
-    
-
-    printf("src PORT: %d\n", ntohs(tcp->th_sport));
-    printf("dst PORT: %d\n", ntohs(tcp->th_dport));
-
-    // print payload data .
-	printf("INFO: payload = %s .\n" , payload );
-
-    char *host_data = NULL;
-	char *host_data_end = NULL;
-	int host_data_len = 0;
-	char host_data_str[256] = { 0x00 };
-
-    host_data = strstr(payload , "Host: ");
-	if ( host_data != NULL ) {
-		host_data += 6;
+        }//아니라면 0 리턴하여 다음패킷봄
+        return 0;
+    }
+    else  //내부 로컬 호스트 검사부분
+    {
+        payload = (u_char *)(packet + SIZE_ETHERNET + size_ip + size_tcp);
 	
-		host_data_end = strstr ( host_data , "\r\n" );
-		
-		host_data_len = host_data_end - host_data ;
-		
-		strncpy(host_data_str , host_data , host_data_len );
-		
-		//char *host_data = strstr(payload , "Host: ");
-		// print host_data string .
-		printf("INFO: host_data_str = %s .\n" , host_data_str );
-		
-	} else {
-		return 0;
-	}
+	    if ( strncmp( payload , "GET / HTTP/" , 11 ) != 0 ) //get 메세지 인지 확인. 아니라면 0리턴하여 다음패킷봄.
+            return 0;
 
-    //host_data_str을 db검사하여 있는 url이라면 발송 
-    sendraw(packet , sendraw_mode);
+        //출력부분
+        printf("src MAC: ");
+        for (int i = 0; i < ETHER_ADDR_LEN; i++)
+            printf("%02x ", mac->ether_shost[i]);
+        puts("");
 
-    return 0;
+        printf("dst MAC: ");
+        for (int i = 0; i < ETHER_ADDR_LEN; i++)
+            printf("%02x ", mac->ether_dhost[i]);
+        puts("");
+
+        
+        printf("src IP: %s\n", inet_ntoa(ip->ip_src));
+        printf("dst IP: %s\n", inet_ntoa(ip->ip_dst));
+        
+
+        printf("src PORT: %d\n", ntohs(tcp->th_sport));
+        printf("dst PORT: %d\n", ntohs(tcp->th_dport));
+
+        // print payload data .
+        printf("INFO: payload = %s .\n" , payload );
+
+        char *host_data = NULL;
+        char *host_data_end = NULL;
+        int host_data_len = 0;
+        char host_data_str[256] = { 0x00 };
+
+        host_data = strstr(payload , "Host: "); //host 얻어 낼 수 있는지 확인하여 얻어낼 수 있다면 얻어내어 이후진행
+        if ( host_data != NULL ) {
+            host_data += 6;
+        
+            host_data_end = strstr ( host_data , "\r\n" );
+            
+            host_data_len = host_data_end - host_data ;
+            
+           
+            strncpy(host_data_str , host_data , host_data_len );
+            *got_info= host_data_str; //url얻어냄
+            
+            return 1;
+            
+        } else { //아니라면 0리턴
+            return 0;
+        }
+
+
+    }
+
+    
 
 }

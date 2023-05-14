@@ -39,7 +39,8 @@ int main()
 
 void *func1(void * arg)
 {
-      u_char *got_ip;
+    //로컬호스트 패킷 캡처부분
+    u_char *got_info;
     struct pcap_pkthdr *header;
     const u_char *packet;
     pcap_t *handle;
@@ -56,7 +57,6 @@ void *func1(void * arg)
         .port = 3306,
         .socket = NULL
     };
-    
     packet_capture_setter(&handle,1);
 
     // 테스트
@@ -66,48 +66,24 @@ void *func1(void * arg)
     while(pcap_next_ex(handle, &header, &packet) == 1)
     {
     
-        flag = got_packet(packet, &got_ip);
+        flag = got_packet(packet, &got_info,1);
         if (flag==0)
             continue;
+
+        //got_info을 db검사하여 있는 url이라면 발송 
+        printf("got_url = %s\n",got_info);
+        sendraw(packet , sendraw_mode);
+
+        
+
+
+        
+       
     // [용도] packet에 정보를 전달하는 함수
     // [인자] handle, packet의 header 구조체, packet 정보
     // [성공] 1
     // [실패] 시간초과 0, 실패 PCAP_ERROR
 
-         printf("got_ip: %s \n", got_ip);
-    
-    
-        mysql = mariadbConnect(info); // Mariadb 접속(연결)
-   
-        resetCheck(&mysql); // MYSQL 구조체 초기화 확인
-
-        if (mysql) { // Mariadb 접속 성공시 실행
-        
-            is_exist = ipFilteringQuery(mysql, info,got_ip); // IP 필터링 쿼리 실행
-            mysql_close(mysql); // 연결 종료
-        }
-
-        if(is_exist) //존재한다면 바로 파이썬모듈 콜해서 우회
-        {
-       
-            printf("ip가 db에있음\n");
-            py_call();
-        }   
-        else //존재하지않는다면 api호출해서 질의
-        {
-        
-            printf("ip가 db에없음\n");
-            hnd = curl_easy_init();
-            is_mal = api_call(hnd,got_ip);
-
-            printf("malli :%d\n",is_mal);
-            
-            if(is_mal) //악의적이라면
-                py_call();
-                //이 if안에 db에 ip추가내용 들어가야함.
-
-            curl_easy_cleanup(hnd);
-        }
     }
     pcap_close(handle);
     
@@ -116,7 +92,7 @@ void *func1(void * arg)
 
 void *func2(void *arg)
 {
-  u_char *got_ip;
+    u_char *got_info;
     struct pcap_pkthdr *header;
     const u_char *packet;
     pcap_t *handle;
@@ -143,7 +119,7 @@ void *func2(void *arg)
     while(pcap_next_ex(handle, &header, &packet) == 1)
     {
     
-        flag = got_packet(packet, &got_ip);
+        flag = got_packet(packet, &got_info,2);
         if (flag==0)
             continue;
     // [용도] packet에 정보를 전달하는 함수
@@ -151,7 +127,7 @@ void *func2(void *arg)
     // [성공] 1
     // [실패] 시간초과 0, 실패 PCAP_ERROR
 
-         printf("got_ip: %s \n", got_ip);
+         printf("got_ip: %s \n", got_info);
     
     
         mysql = mariadbConnect(info); // Mariadb 접속(연결)
@@ -160,7 +136,7 @@ void *func2(void *arg)
 
         if (mysql) { // Mariadb 접속 성공시 실행
         
-            is_exist = ipFilteringQuery(mysql, info,got_ip); // IP 필터링 쿼리 실행
+            is_exist = ipFilteringQuery(mysql, info,got_info); // IP 필터링 쿼리 실행
             mysql_close(mysql); // 연결 종료
         }
 
@@ -175,7 +151,7 @@ void *func2(void *arg)
         
             printf("ip가 db에없음\n");
             hnd = curl_easy_init();
-            is_mal = api_call(hnd,got_ip);
+            is_mal = api_call(hnd,got_info);
 
             printf("malli :%d\n",is_mal);
             
