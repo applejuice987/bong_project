@@ -72,7 +72,7 @@ void *func1(void * arg)
 
         //got_info을 db검사하여 있는 url이라면 발송 
         printf("got_url = %s\n",got_info);
-        sendraw(packet , sendraw_mode);
+        //sendraw(packet , sendraw_mode);
 
         
 

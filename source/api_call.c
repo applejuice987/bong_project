@@ -1,4 +1,6 @@
 #include "../header/api_call.h"
+#include "../header/db.h"
+
 #include <string.h>
 size_t write_to_memory_callback(void *buffer, size_t size, size_t nmemb, void *userp) {
 
@@ -22,7 +24,7 @@ size_t write_to_memory_callback(void *buffer, size_t size, size_t nmemb, void *u
 // 공식사이트에도 위함수 코드에 대한 자세한 내용은없음. 
 // "받아온내용을 변수에 넣기위한 콜백함수" 정도로만 생각하면될듯.
 
-int api_call(CURL * hnd,u_char * ip_str) //api 호출 함수
+int api_call(CURL * hnd, u_char * ip_str) //api 호출 함수
 {
    
     struct MemoryStruct chunk; //응답내용 받을 변수
@@ -62,15 +64,58 @@ int api_call(CURL * hnd,u_char * ip_str) //api 호출 함수
     CURLcode ret = curl_easy_perform(hnd);
     //curl 요청 실행. 응답코드가 ret에 담김.
     //printf("111111111 : %s\n\n\n", chunk.memory);
-    json_object *jobj,*is_malobj;
+    json_object *jobj,*is_malobj, *is_vpnobj, *is_canremoteobj;
     jobj = json_tokener_parse(chunk.memory);
     //받아온 json 파싱
     is_malobj = json_object_object_get(jobj, "is_malicious");
+    is_vpnobj = json_object_object_get(jobj, "is_vpn");
+    is_canremoteobj = json_object_object_get(jobj, "can_remote_access");
+
     //우리가 필요한 is_json부분 가져옴
    
-    
+    //printf("dataType : %s\n", json_object_get_string(is_malobj));
+    //printf("dataType : %d\n", json_object_get_boolean(is_malobj));
 
-    
+    char is_malval, is_vpnval, is_canremoteval;
+    if      (json_object_get_boolean(is_malobj) == 1)        is_malval = 'T';
+    else if (json_object_get_boolean(is_malobj) == 0)       is_malval = 'F';
+    if      (json_object_get_boolean(is_vpnobj) == 1)        is_vpnval = 'T';
+    else if (json_object_get_boolean(is_vpnobj) == 0)       is_vpnval = 'F';
+    if      (json_object_get_boolean(is_canremoteobj) == 1)  is_canremoteval = 'T';
+    else if (json_object_get_boolean(is_canremoteobj) == 0) is_canremoteval = 'F';
+
+    // MYSQL 구조체
+    MYSQL* mysql = NULL;
+
+    // DB 정보
+    db_info info = {
+        .host_ip = "127.0.0.1",
+        .user_id = "bong",
+        .passwd = "1234",
+        .db_name = "project",
+        .table_name = "ip_table",
+        .port = 3306,
+        .socket = NULL
+    };
+
+    // DB 연결
+    mysql = mariadbConnect(info);
+
+    // SQL 명령문 세팅
+    char query_string[512];
+    sprintf(query_string , 
+		"insert into ip_table "
+		"(time, ip_str, is_mal, is_vpn, can_remote_access) "
+		"values "
+		"('%s', '%c', '%c', '%c')" ,
+        ip_str, is_malval, is_vpnval, is_canremoteval
+	);
+
+    // SQL 실제 입력
+    mysql_query(mysql, query_string);
+
+    mysql_close(mysql);
+
     free(chunk.memory);
     //메모리 반환
     return json_object_get_boolean(is_malobj);
