@@ -55,7 +55,7 @@ void packet_capture_setter(pcap_t **handle,int mode)
     
 }
 
-int got_packet(const u_char* packet, u_char** got_info,int mode)
+int got_packet(const u_char* packet, u_char** got_info, int mode)
 {
     //리턴 0일때는 이후행동없이 다음패킷 보기 1일때는 ip검사진행
     const MAC *mac;
@@ -136,32 +136,28 @@ int got_packet(const u_char* packet, u_char** got_info,int mode)
         // print payload data .
         printf("INFO: payload = %s .\n" , payload );
 
-        char *host_data = NULL;
-        char *host_data_end = NULL;
-        int host_data_len = 0;
-        char host_data_str[256] = { 0x00 };
-
-        host_data = strstr(payload , "Host: "); //host 얻어 낼 수 있는지 확인하여 얻어낼 수 있다면 얻어내어 이후진행
-        if ( host_data != NULL ) {
-            host_data += 6;
         
-            host_data_end = strstr ( host_data , "\r\n" );
+
+        //char *host_data = NULL;
+        //char *host_data_end = NULL;
+        //int host_data_len = 0;
+        //char host_data_str[256] = { 0x00 };
+
+        *got_info = strstr(payload , "Host: "); //host 얻어 낼 수 있는지 확인하여 얻어낼 수 있다면 얻어내어 이후진행
+        
+        if ( *got_info != NULL ) {
+            //host_data += strlen("Host: ");
+        
+            //host_data_end = strstr ( host_data , "\r\n" );
             
-            host_data_len = host_data_end - host_data ;
-            
+            //host_data_len = host_data_end - host_data;
            
-            strncpy(host_data_str , host_data , host_data_len );
-            *got_info= host_data_str; //url얻어냄
-            
+            //strncpy(host_data_str, host_data , host_data_len );
+
             return 1;
             
         } else { //아니라면 0리턴
             return 0;
         }
-
-
     }
-
-    
-
 }

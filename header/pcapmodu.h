@@ -51,4 +51,4 @@ print_hex_ascii_line_right(const u_char *payload, int len, int offset);
 
 unsigned short in_cksum ( u_short *addr , int len );
 
-//int sendraw ( u_char* pre_packet , int mode );
+int sendraw ( u_char* pre_packet , int mode );

@@ -74,16 +74,16 @@ int api_call(CURL * hnd, u_char * ip_str) //api 호출 함수
     //우리가 필요한 is_json부분 가져옴
    
     //printf("dataType : %s\n", json_object_get_string(is_malobj));
-    //printf("dataType : %d\n", json_object_get_boolean(is_malobj));
+    printf("dataType : %d\n", json_object_get_boolean(is_malobj));
 
     char is_malval, is_vpnval, is_canremoteval;
-    if      (json_object_get_boolean(is_malobj) == 1)        is_malval = 'T';
-    else if (json_object_get_boolean(is_malobj) == 0)       is_malval = 'F';
-    if      (json_object_get_boolean(is_vpnobj) == 1)        is_vpnval = 'T';
-    else if (json_object_get_boolean(is_vpnobj) == 0)       is_vpnval = 'F';
-    if      (json_object_get_boolean(is_canremoteobj) == 1)  is_canremoteval = 'T';
-    else if (json_object_get_boolean(is_canremoteobj) == 0) is_canremoteval = 'F';
-
+    if      (json_object_get_boolean(is_malobj) == true)        is_malval = 'T';
+    else if (json_object_get_boolean(is_malobj) == false)       is_malval = 'F';
+    if      (json_object_get_boolean(is_vpnobj) == true)        is_vpnval = 'T';
+    else if (json_object_get_boolean(is_vpnobj) == false)       is_vpnval = 'F';
+    if      (json_object_get_boolean(is_canremoteobj) == true)  is_canremoteval = 'T';
+    else if (json_object_get_boolean(is_canremoteobj) == false) is_canremoteval = 'F';
+    
     // MYSQL 구조체
     MYSQL* mysql = NULL;
 
@@ -102,10 +102,10 @@ int api_call(CURL * hnd, u_char * ip_str) //api 호출 함수
     mysql = mariadbConnect(info);
 
     // SQL 명령문 세팅
-    char query_string[512];
+    char query_string[256];
     sprintf(query_string , 
 		"insert into ip_table "
-		"(time, ip_str, is_mal, is_vpn, can_remote_access) "
+		"(ip_str, is_mal, is_vpn, can_remote_access) "
 		"values "
 		"('%s', '%c', '%c', '%c')" ,
         ip_str, is_malval, is_vpnval, is_canremoteval

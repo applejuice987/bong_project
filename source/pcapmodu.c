@@ -217,7 +217,7 @@ int sendraw( u_char* pre_packet, int mode)
 							"</head>\r\n"
 							"<body>\r\n"
 							"<center>\r\n"
-		"<img   src=\"http://127.0.0.1:3000/warning.jpg\" alter=\"*WARNING*\">\r\n"
+		"<img   src=\"http://127.0.0.1:80/warning.jpg\" alter=\"*WARNING*\">\r\n"
         "<h1>SITE BLOCKED</h1>\r\n"
 							"</center>\r\n"
 							"</body>\r\n"
