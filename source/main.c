@@ -6,7 +6,6 @@
 #include <string.h>
 #include <pthread.h>
 #include <unistd.h>
-
 #include "../header/py_call.h"
 #include "../header/db.h"
 #include "../header/pcapcap.h"
