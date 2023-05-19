@@ -96,13 +96,16 @@ void *func1(void * arg)
         if (res == NULL) continue;
         else
         {
-            while((row = mysql_fetch_row(res)) != NULL)   
+            while((row = mysql_fetch_row(res)) != NULL) 
                 res_cnt = row[0];
+               
+            
+                
         }
-
+        
         mysql_free_result(res);
 
-        if(res_cnt > 0) sendraw(packet, sendraw_mode);        
+        if(strcmp(res_cnt,"1")==0) sendraw(packet, sendraw_mode);        
         else            continue;
 
     // [용도] packet에 정보를 전달하는 함수
@@ -171,7 +174,7 @@ void *func2(void *arg)
             MYSQL_RES* res;
             
             char query_string[256];
-            sprintf(query_string, "SELECT is_mal FROM ip_table WHERE ip_str = '%s'", got_info);
+            sprintf(query_string, "SELECT is_malicious FROM ip_table WHERE ip_str = '%s'", got_info);
             mysql_query(mysql, query_string);
 
             res = mysql_store_result(mysql);
