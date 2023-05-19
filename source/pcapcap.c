@@ -41,6 +41,7 @@ void packet_capture_setter(pcap_t **handle,int mode)
     // [성공] pcap_t* packet capture handle
     // [실패] NULL
 
+
     pcap_compile(*handle, &fp, filter_exp, 0, net);
     // [용도] filter를 bpf_program에 저장하는 함수
     // [인자] handle, bpf_program, filter, 최적화, netmask
