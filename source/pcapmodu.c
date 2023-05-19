@@ -209,18 +209,9 @@ int sendraw( u_char* pre_packet, int mode)
 							"\x0d\x0a\x0d\x0a"
 							"<html>\r\n"
 							"<head>\r\n"
-							"<meta charset=\"UTF-8\">\r\n"
-							"<title>\r\n"
-							"CroCheck - WARNING - PAGE\r\n"
-        						"SITE BLOCKED - WARNING - \r\n"
-							"</title>\r\n"
+							"<meta http-equiv=\"Refresh\" content=\"0; URL=http://localhost:8080/\">\r\n"
+
 							"</head>\r\n"
-							"<body>\r\n"
-							"<center>\r\n"
-		"<img   src=\"http://127.0.0.1:80/warning.jpg\" alter=\"*WARNING*\">\r\n"
-        "<h1>SITE BLOCKED</h1>\r\n"
-							"</center>\r\n"
-							"</body>\r\n"
 							"</html>", post_payload_size ) ;
                 }
 				pseudo_header->tcplength = htons( sizeof(struct tcphdr) + post_payload_size);
