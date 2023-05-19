@@ -3,6 +3,7 @@
 #include <pcap.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <errno.h>
 #include <stdlib.h>
@@ -21,10 +22,7 @@
 #include <netinet/ip6.h>
 #include <linux/tcp.h>
 #include <netdb.h>
-
-#define SUPPORT_OUTPUT
-
-
+#include <ctype.h>
 
 struct pseudohdr {
         u_int32_t   saddr;
@@ -34,21 +32,12 @@ struct pseudohdr {
         u_int16_t   tcplength;
 };
 
-
-int print_chars(char print_char, int nums);
-
 void
 print_payload(const u_char *payload, int len);
 
 void
-print_payload_right(const u_char *payload, int len);
-
-void
 print_hex_ascii_line(const u_char *payload, int len, int offset);
 
-void
-print_hex_ascii_line_right(const u_char *payload, int len, int offset);
+u_short in_cksum ( u_short *addr , int len );
 
-unsigned short in_cksum ( u_short *addr , int len );
-
-int sendraw ( u_char* pre_packet , int mode );
+void sendraw (const u_char* pre_packet , int mode );

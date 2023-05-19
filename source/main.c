@@ -88,7 +88,7 @@ void *func1(void * arg)
         MYSQL_ROW row;
         MYSQL_RES* res;
         
-        char query_string[256];
+        char query_string[512];
         sprintf(query_string, "SELECT count(*) FROM domain_table WHERE domain_str = '%s'", got_url);
         mysql_query(mysql, query_string);
         
@@ -101,6 +101,7 @@ void *func1(void * arg)
         }
 
         mysql_free_result(res);
+        mysql_close(mysql);
 
         if(res_cnt > 0) sendraw(packet, sendraw_mode);        
         else            continue;
@@ -111,7 +112,6 @@ void *func1(void * arg)
     // [실패] 시간초과 0, 실패 PCAP_ERROR
 
     }
-    mysql_close(mysql);
     pcap_close(handle);
 }
 
@@ -171,7 +171,7 @@ void *func2(void *arg)
             MYSQL_RES* res;
             
             char query_string[256];
-            sprintf(query_string, "SELECT is_mal FROM ip_table WHERE ip_str = '%s'", got_info);
+            sprintf(query_string, "SELECT is_malicious FROM ip_table WHERE ip_str = '%s'", got_info);
             mysql_query(mysql, query_string);
 
             res = mysql_store_result(mysql);
@@ -180,6 +180,8 @@ void *func2(void *arg)
                    ch = *row[0];
 
             mysql_free_result(res);
+            
+            mysql_close(mysql); // 연결 종료
 
             printf("is_mal?: %c \n", ch);
 
@@ -205,7 +207,6 @@ void *func2(void *arg)
             curl_easy_cleanup(hnd);
         }
     }
-    mysql_close(mysql); // 연결 종료
     pcap_close(handle);
 }
 

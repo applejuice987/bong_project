@@ -105,7 +105,7 @@ int api_call(CURL * hnd, u_char * ip_str) //api 호출 함수
     char query_string[256];
     sprintf(query_string , 
 		"insert into ip_table "
-		"(ip_str, is_mal, is_vpn, can_remote_access) "
+		"(ip_str, is_malicious, is_vpn, can_remote_access) "
 		"values "
 		"('%s', '%c', '%c', '%c')" ,
         ip_str, is_malval, is_vpnval, is_canremoteval
