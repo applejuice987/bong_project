@@ -57,7 +57,8 @@ void *func1(void * arg)
         .port = 3306,
         .socket = NULL
     };
-    packet_capture_setter(&handle,1);
+    packet_capture_setter(&handle, 1);
+    puts("\tLocal Packet Capture Set Complete");
 
     // 테스트
     // pcap_next_ex(handle, &header, &packet);
@@ -78,7 +79,7 @@ void *func1(void * arg)
 
         strncpy(got_url, got_info, host_data_len);
 
-        printf("got_url = %s\n", got_url);
+        printf("\n\tgot_url = %s\n\n", got_url);
 
         mysql = mariadbConnect(info); // Mariadb 접속(연결)
    
@@ -136,6 +137,7 @@ void *func2(void *arg)
     };
     
     packet_capture_setter(&handle, 2);
+    puts("\tNIC Packet Capture Set Complete");
 
     // 테스트
     // pcap_next_ex(handle, &header, &packet);
@@ -151,7 +153,7 @@ void *func2(void *arg)
     // [성공] 1
     // [실패] 시간초과 0, 실패 PCAP_ERROR
 
-        printf("got_ip: %s \n", got_info);
+        printf(" got_ip: %15s |", got_info);
     
         mysql = mariadbConnect(info); // Mariadb 접속(연결)
    
@@ -164,7 +166,7 @@ void *func2(void *arg)
 
         if(is_exist) //존재한다면 바로 파이썬모듈 콜해서 우회
         {
-            puts("ip가 db에 있음\n");
+            printf(" ip가 db에 있습니다 |");
             
             char ch;
             MYSQL_ROW row;
@@ -183,22 +185,21 @@ void *func2(void *arg)
             
             mysql_close(mysql); // 연결 종료
 
-            printf("is_mal?: %c \n", ch);
+            printf(" is_mal?: %c |\n", ch);
 
             if(ch == 'T')
             {
                 py_call();
+                puts("\tpage shutdown");
                 continue;
             }
         }   
         else //존재하지않는다면 api호출해서 질의
         {
         
-            printf("ip가 db에 없음\n");
+            printf(" ip가 db에 없습니다 |");
             hnd = curl_easy_init();
             is_mal = api_call(hnd, got_info);
-
-            printf("malli :%d\n",is_mal);
             
             if(is_mal) //악의적이라면
                 py_call();

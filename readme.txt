@@ -93,6 +93,15 @@ MAC IP TCP 구조체 변수 전역변수로
 05-01
 pcap_lookupdev()함수 pcap_findalldevs()함수로 교체
 비교할 ip를 얻기 위해 pcap_loop()함수를 pcap_next_ex()함수로 교체
+05-17
+ip - db 입력 is_mal 검사 파트 구현
+05-18
+url - db 검사 파트 구현
+05-19
+sendraw() 정리
+05-22
+pcap 에러처리
+출력 정리
 
 정민수
 

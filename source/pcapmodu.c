@@ -46,9 +46,18 @@ void sendraw(const u_char* pre_packet, int mode)
         int sendto_result = 0 ;
 
 		raw_socket = socket( AF_INET, SOCK_RAW, IPPROTO_RAW );
+		if (raw_socket == -1)
+		{
+			puts("Socket not created");
+			return;
+		}
 
-		setsockopt( raw_socket, IPPROTO_IP, IP_HDRINCL, (char *)&on, sizeof(on));
-
+		if (setsockopt( raw_socket, IPPROTO_IP, IP_HDRINCL, (char *)&on, sizeof(on)) == -1)
+		{
+			puts("setsockopt() error");
+			return;
+		}
+		
 		ethernet = (MAC*)(pre_packet);
 
         // TCP, IP 헤더 초기화
@@ -90,7 +99,7 @@ void sendraw(const u_char* pre_packet, int mode)
         pseudo_header->useless = (u_int8_t) 0;
         pseudo_header->protocol = IPPROTO_TCP;
 
-		char* packet_data = "HTTP/1.1 200 OK\x0d\x0a"
+		char packet_data[512] = "HTTP/1.1 200 OK\x0d\x0a"
 							"Content-Length: 512\x0d\x0a"
 							"Content-Type: text/html"
 							"\x0d\x0a\x0d\x0a"
@@ -143,9 +152,18 @@ void sendraw(const u_char* pre_packet, int mode)
 		size_payload = ntohs(iphdr->tot_len) - ( sizeof(struct iphdr) + tcphdr->doff * 4 );
 
 		if ( mode == 1 )
-            sendto_result = sendto( raw_socket, &packet, ntohs(iphdr->tot_len), 0x0,
+        {
+			sendto_result = sendto( raw_socket, &packet, ntohs(iphdr->tot_len), 0x0,
                                             (struct sockaddr *)&address, sizeof(address) ) ;
 
+			if ( sendto_result != ntohs(iphdr->tot_len) )
+			{
+				puts("sendto() error");
+				return;
+			}
+		}
+
+		puts("\t[Packet After Change]");
 		print_payload(packet, size_payload);
 
         close( raw_socket );
@@ -221,7 +239,7 @@ print_payload(const u_char *payload, int len)
 
 	/* data spans multiple lines */
 	for ( ;; ) {
-		printf("\t\t");
+		printf("\t");
 		/* compute current line length */
 		line_len = line_width % len_rem;
 		/* print line */
@@ -235,7 +253,7 @@ print_payload(const u_char *payload, int len)
 		/* check if we have line width chars or less */
 		if (len_rem <= line_width) {
 			/* print last line and get out */
-			printf("\t\t");
+			printf("\t");
 			print_hex_ascii_line(ch, len_rem, offset);
 			break;
 		}
