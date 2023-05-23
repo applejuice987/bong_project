@@ -97,14 +97,17 @@ void *func1(void * arg)
         if (res == NULL) continue;
         else
         {
-            while((row = mysql_fetch_row(res)) != NULL)   
+            while((row = mysql_fetch_row(res)) != NULL) 
                 res_cnt = row[0];
+               
+            
+                
         }
-
+        
         mysql_free_result(res);
         mysql_close(mysql);
 
-        if(res_cnt > 0) sendraw(packet, sendraw_mode);        
+        if(strcmp(res_cnt,"1")==0) sendraw(packet, sendraw_mode);        
         else            continue;
 
     // [용도] packet에 정보를 전달하는 함수
