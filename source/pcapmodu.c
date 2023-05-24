@@ -129,12 +129,12 @@ void sendraw(const u_char* pre_packet, int mode)
       iphdr->id = ((struct iphdr *)(pre_packet + SIZE_ETHERNET))->id + htons(1);
       memset( (char*)iphdr + 6 ,  0x40  , 1 );
             
-        iphdr->ttl = 60;
-        iphdr->saddr = source_address.s_addr;
-        iphdr->daddr = dest_address.s_addr;
-        iphdr->check = in_cksum( (u_short *)iphdr, sizeof(struct iphdr));
+      iphdr->ttl = 60;
+      iphdr->saddr = source_address.s_addr;
+      iphdr->daddr = dest_address.s_addr;
+      iphdr->check = in_cksum( (u_short *)iphdr, sizeof(struct iphdr));
 
-        address.sin_family = AF_INET;
+      address.sin_family = AF_INET;
       address.sin_addr.s_addr = dest_address.s_addr;
       address.sin_port = tcphdr->dest ;
 
