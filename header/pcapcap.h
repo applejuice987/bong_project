@@ -5,6 +5,9 @@
 
 #define ETHER_ADDR_LEN 6
 #define SIZE_ETHERNET 14
+#define SIZE_MIN_IP 20
+#define SIZE_MIN_TCP 20
+
 #define IP_HL(ip) (((ip)->ip_vhl) & 0x0f)
 #define IP_V(ip) (((ip)->ip_vhl) >> 4)
 #define sendraw_mode 1

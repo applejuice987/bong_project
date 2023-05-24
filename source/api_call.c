@@ -74,7 +74,6 @@ int api_call(CURL * hnd, u_char * ip_str) //api 호출 함수
     //우리가 필요한 is_json부분 가져옴
    
     //printf("dataType : %s\n", json_object_get_string(is_malobj));
-    printf(" dataType : %d\n", json_object_get_boolean(is_malobj));
 
     char is_malval, is_vpnval, is_canremoteval;
     if      (json_object_get_boolean(is_malobj) == true)        is_malval = 'T';
