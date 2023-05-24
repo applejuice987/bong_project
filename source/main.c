@@ -1,6 +1,5 @@
 // main함수 진행될 파일
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
